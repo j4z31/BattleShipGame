@@ -15,11 +15,11 @@ Game.prototype.start = function(){
   // DISPARO
   var numShots = 0;
   do{
-    console.log('TMP: table', this.players[0].table._field );
+    this.players[0].table.display();
     var pos = this.getUserShot();
     numShots++;
     //EVALUAR EL DISPARO
-    this.players[0].table._field[pos] = 'x';
+    this.players[0].table.shot(0,0);
   }while(numShots < 3);
 };
 

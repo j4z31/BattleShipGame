@@ -13,20 +13,63 @@ Game.prototype.start = function(){
 
 //Trainner
 
-var Table = function(size){
-  this.size = size;
+var Table = function(sizeX){
+  var size = sizeX;
   this.ships = [];
-  this._field = [];
-  this._initField();
-  this._createShips();
-  this._placeShips();
+  var _field = new Array(size);
+  var _initField = function(){
+
+    for (var i = 0; i < size; i++) {
+      _field[i] = new Array(size); // define cada elemento como una matriz
+      for (var j = 0; j < size; j++) {
+        _field[i][j] = "[-]"; // asigna a cada elemento de la matriz bidimensional
+
+      };
+
+
+    };
+
+    getSize = function()
+    {
+      return size;
+    };
+
+    getField = function(){
+      return _field;
+    };
+
+
+    /*for (var i = 0; i < this.size; i++) {
+     this._field.push('-');
+     }*/
+  };
+  _initField();
+  //this.display();
+
+
+  //this._createShips();
+  //this._placeShips();
+};
+Table.prototype.shot = function(){
+
+
 };
 
-Table.prototype._initField = function(){
-  for (var i = 0; i < this.size; i++) {
-    this._field.push('-');
-  }
+Table.prototype.display = function(){
+
+  var tam =  getSize();
+  var field = getField();
+  for (var i = 0; i < tam; i++) {
+    var str = "Fila " + i + ":";
+    for (var j = 0; j < tam; j++) {
+      str += field[i][j]; // añade a la cadena el contenido de la matriz bidimensional
+    }
+    console.log(str);
+  };
+
+
 };
+//Table.prototype._initField
 
 Table.prototype._createShips = function(){
   //TODO: Number of shipe should be retrieved from a constant
