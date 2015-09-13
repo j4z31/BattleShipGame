@@ -22,6 +22,7 @@ Game.prototype.start = function(){
     this.players[0].table._field[pos] = 'x';
   }while(numShots < 3);
 };
+
 Game.prototype._createPlayers = function(){
   //TODO: Number of players should bn retrieved from a constant
   var _numPlayers = 5;
