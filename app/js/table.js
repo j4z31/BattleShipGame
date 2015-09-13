@@ -16,13 +16,15 @@ Game.prototype.start = function(){
 var Table = function(sizeX){
   var size = sizeX;
   this.ships = [];
+  var water = "  ~  ";
   var _field = new Array(size);
   var _initField = function(){
 
     for (var i = 0; i < size; i++) {
       _field[i] = new Array(size); // define cada elemento como una matriz
       for (var j = 0; j < size; j++) {
-        _field[i][j] = "[-]"; // asigna a cada elemento de la matriz bidimensional
+        _field[i][j] = water; // asigna a cada elemento de la matriz bidimensional
+
 
       };
 
@@ -37,7 +39,9 @@ var Table = function(sizeX){
     getField = function(){
       return _field;
     };
-
+    getWater = function(){
+      return water;
+    };
 
     /*for (var i = 0; i < this.size; i++) {
      this._field.push('-');
@@ -57,15 +61,40 @@ Table.prototype.shot = function(){
 
 Table.prototype.display = function(){
 
+  //check this clear! should be moved to other class
+  console.clear();
   var tam =  getSize();
   var field = getField();
+
+  var col = "-    ";
+  var delimiter = "======";
+  for(var x = 0; x< tam; x++) {
+    delimiter += "=====";
+
+    if (x < 10) {
+      col += x + "    ";
+
+    }
+    else {
+      col += x + "   ";
+
+    }
+  }
+  console.log(delimiter);
+  console.log(col);
+
   for (var i = 0; i < tam; i++) {
-    var str = "Fila " + i + ":";
+    var str = i + " ";
+    if(i<10)
+    { str +=" ";}
     for (var j = 0; j < tam; j++) {
+
       str += field[i][j]; // añade a la cadena el contenido de la matriz bidimensional
     }
+    console.log("");
     console.log(str);
   };
+  console.log(delimiter);
 
 
 };
@@ -91,6 +120,42 @@ Table.prototype._placeShips = function(){
   }
 };
 
+Table.prototype.thereIsSpace = function(direction,row,spaceSize){
+  var field = getField();
+  var size = field.length;
+  var res = -1;
+  var countFreeSpace = 0;
+
+  if(direction == "x") {
+    for (var i = 0; i < size; i++) {
+      //console.log(field[row][i]);
+      if (field[row][i] == getWater()) {
+        countFreeSpace++;
+        if (countFreeSpace == spaceSize) {
+          res = (i - spaceSize) + 1;
+          return res;
+        }
+      }
+    }
+
+  }
+  else
+  {
+    for (var i = 0; i < size; i++) {
+      //console.log(field[row][i]);
+      if (field[i][row] == getWater()) {
+        countFreeSpace++;
+        if (countFreeSpace == spaceSize) {
+          res = (i - spaceSize) + 1;
+          return res;
+        }
+      }
+    }
+  };
+
+  return res;
+
+};
 
 
   /*Table.prototype._placeShips = function(){
