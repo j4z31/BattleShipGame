@@ -1,38 +1,36 @@
 var Game = function(name, tam){
   this.name = name;
   // TODO: Number of shots should be retrieved from a constant
-  this.maxNumShots = 10;
-  //this.tamTable = tam;
-  this.players = [];
-  this._createPlayers();
+  var maxNumShots = 10;
+  this.getMaxNumShots = function(){return maxNumShots};
+
+  var players = [];
+  this.getPlayers = function(){return players};
+  
+  var table;
+  this.getTable = function(){return table};
 };
 
 Game.prototype.start = function(){
-  console.log(this.name, ' game started');
-  console.log('Here should start the game logic');
-
-
+  console.log(this.name, ' Started!!!');
+  this._setGame();
+  
   // DISPARO
   var numShots = 0;
   do{
-    console.log('TMP: table', this.players[0].table._field );
-    var pos = this.getUserShot();
+    console.log('TMP: Table', this.getTable().display());    
     numShots++;
+
     //EVALUAR EL DISPARO
-    this.players[0].table._field[pos] = 'x';
-  }while(numShots < 3);
+    
+  }while(numShots < this.getMaxNumShots());
 };
 
-Game.prototype._createPlayers = function(){
+Game.prototype._setGame = function(){
   //TODO: Number of players should bn retrieved from a constant
-  var _numPlayers = 5;
-  for (var i = 0; i < _numPlayers; i++) {
-    var player = new Player('Player' + i);
-    this.players.push(player);
-  }
-};
-
-
-Game.prototype.getUserShot = function(){
-  return parseInt(window.prompt('Shot? (x)'));
+  var name = window.prompt('What is your name');
+  var tamTable = window.prompt('Size of your table');
+  this.players.push(new Player(name));
+  var table = this.getTable();
+  table = new Table (tamTable);
 };
