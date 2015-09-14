@@ -8,3 +8,11 @@ var generateRandom=function (min,max){
      return max;
     return Math.round(Math.random()*(max-min)+min);
 };
+
+var getRandomDirection = function() {
+
+    if(generateRandom(0,1)== 0)
+        return "x";
+    else
+        return "y";
+};
