@@ -39,9 +39,15 @@ var Table = function(sizeX){
     getField = function(){
       return _field;
     };
+    setField = function(newField){
+      _field = newField;
+    };
+
     getWater = function(){
       return water;
     };
+
+
 
     /*for (var i = 0; i < this.size; i++) {
      this._field.push('-');
@@ -51,8 +57,8 @@ var Table = function(sizeX){
   //this.display();
 
 
-  //this._createShips();
-  //this._placeShips();
+  this._createShips();
+  this._placeShips();
 };
 Table.prototype.shot = function(){
 
@@ -102,7 +108,7 @@ Table.prototype.display = function(){
 
 Table.prototype._createShips = function(){
   //TODO: Number of shipe should be retrieved from a constant
-  var numShips = 2;
+  var numShips = 8;
   var ship;
   for (var i = 0; i < numShips; i++) {
     ship = new Ship(i, 3);
@@ -111,31 +117,140 @@ Table.prototype._createShips = function(){
 };
 
 Table.prototype._placeShips = function(){
+
+  var field = getField();
+/*
   for (var i = 0; i < this.ships.length; i++) {
     var ship = this.ships[i];
-    var initPos = parseInt(Math.random() * (this.size - ship.size));
-    for (var j = initPos; j <(initPos+ship.size); j++) {
-      this._field[j] = ship.id;
+    var initPos = parseInt(Math.random() * (getSize() - ship.getSize()));
+    for (var j = initPos; j <(initPos+ship.getSize()); j++) {
+      field[i][j] = "  "+ship.getID()+"  ";
     }
   }
+*/
+
+
+  for (var i = 0; i < this.ships.length; i++) {
+    var ship = this.ships[i];
+    var direction = getRandomDirection();
+    var index = generateRandom(0,getSize());
+
+    var arrFreeSpace = this.thereIsSpace(direction,index,ship.getSize());
+    if(arrFreeSpace[0]==-1)
+    {
+      index = this.findAvailableIndex(direction,index,ship.getSize());
+      if(index!=-1)
+      {
+        ship.setDirection(direction);
+        if(direction == "x")
+        {
+          ship.setPositionX(index);
+          var posY = generateRandom(arrFreeSpace[0],(arrFreeSpace[0]+arrFreeSpace[1])-ship.getSize());
+          ship.setPositionY(posY);
+
+        }else{
+          ship.setPositionY(index);
+          var posX = generateRandom(arrFreeSpace[0],(arrFreeSpace[0]+arrFreeSpace[1])-ship.getSize());
+          ship.setPositionX(posX);
+        }
+        this.drawShip(ship);
+
+
+      }
+      else
+      {
+        console.log("there is not enough space to draw the ship");
+      }
+
+    }
+    else{
+      ship.setDirection(direction);
+      if(direction == "x")
+      {
+        ship.setPositionX(index);
+        var posY = generateRandom(arrFreeSpace[0],(arrFreeSpace[0]+arrFreeSpace[1])-ship.getSize());
+        ship.setPositionY(posY);
+
+      }else{
+        ship.setPositionY(index);
+        var posX = generateRandom(arrFreeSpace[0],(arrFreeSpace[0]+arrFreeSpace[1])-ship.getSize());
+        ship.setPositionX(posX);
+      }
+
+      this.drawShip(ship);
+    }
+
+  }
+
+
+
+  setField(field);
 };
 
-Table.prototype.thereIsSpace = function(direction,row,spaceSize){
+Table.prototype.findAvailableIndex = function(direction,index,shipSize)
+{
+  var pos= index;
+  var res = -1;
+  for(var i = 1; i< getSize();i++){
+    if(pos>=getSize()-1)
+    {
+      pos = 0;
+    }
+    var arrFreeSpace = this.thereIsSpace(direction,pos,shipSize);
+    if(arrFreeSpace[0]!=-1)
+    {
+      return res = pos;
+    }
+    pos++;
+
+  };
+
+  return res;
+
+
+};
+
+
+Table.prototype.drawShip = function(){
+
+};
+
+
+
+Table.prototype.thereIsSpace = function(direction,index,spaceSize){
   var field = getField();
   var size = field.length;
-  var res = -1;
+  var res = [];
+  res[0] = -1;
+  res[1] = -1;
   var countFreeSpace = 0;
 
   if(direction == "x") {
     for (var i = 0; i < size; i++) {
       //console.log(field[row][i]);
-      if (field[row][i] == getWater()) {
-        countFreeSpace++;
-        if (countFreeSpace == spaceSize) {
-          res = (i - spaceSize) + 1;
-          return res;
+      if(field[index][i] != getWater() && countFreeSpace >= spaceSize){
+        res[0] = (i - countFreeSpace);
+        res[1] = countFreeSpace;
+        return res;
+      }else{
+        if (field[index][i] == getWater()) {
+          countFreeSpace++;
+
+          if(i==size-1 && countFreeSpace>= spaceSize)
+          {
+            res[0] = (i - countFreeSpace)+1;
+            res[1] = countFreeSpace;
+            return res;
+          }
+
+        }else {
+          countFreeSpace = 0;
         }
       }
+
+
+
+
     }
 
   }
@@ -143,13 +258,29 @@ Table.prototype.thereIsSpace = function(direction,row,spaceSize){
   {
     for (var i = 0; i < size; i++) {
       //console.log(field[row][i]);
-      if (field[i][row] == getWater()) {
-        countFreeSpace++;
-        if (countFreeSpace == spaceSize) {
-          res = (i - spaceSize) + 1;
-          return res;
+      if(field[i][index] != getWater() && countFreeSpace >= spaceSize){
+        res[0] = (i - countFreeSpace);
+        res[1] = countFreeSpace;
+        return res;
+      }else{
+        if (field[i][index] == getWater()) {
+          countFreeSpace++;
+
+          if(i==size-1 && countFreeSpace>= spaceSize)
+          {
+            res[0] = (i - countFreeSpace)+1;
+            res[1] = countFreeSpace;
+            return res;
+          }
+
+        }else {
+          countFreeSpace = 0;
         }
       }
+
+
+
+
     }
   };
 
