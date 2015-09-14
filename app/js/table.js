@@ -111,7 +111,7 @@ Table.prototype._createShips = function(){
   var numShips = 8;
   var ship;
   for (var i = 0; i < numShips; i++) {
-    ship = new Ship(i, 3);
+    ship = new Ship(i, 6);
     this.ships.push(ship);
   }
 };
@@ -133,23 +133,24 @@ Table.prototype._placeShips = function(){
   for (var i = 0; i < this.ships.length; i++) {
     var ship = this.ships[i];
     var direction = getRandomDirection();
-    var index = generateRandom(0,getSize());
+    var index = generateRandom(0,getSize()-1);
 
     var arrFreeSpace = this.thereIsSpace(direction,index,ship.getSize());
     if(arrFreeSpace[0]==-1)
     {
-      index = this.findAvailableIndex(direction,index,ship.getSize());
-      if(index!=-1)
+      var newIndex = this.findAvailableIndex(direction,index,ship.getSize());
+      if(newIndex!=-1)
       {
+        arrFreeSpace = this.thereIsSpace(direction,newIndex,ship.getSize());
         ship.setDirection(direction);
         if(direction == "x")
         {
-          ship.setPositionX(index);
+          ship.setPositionX(newIndex);
           var posY = generateRandom(arrFreeSpace[0],(arrFreeSpace[0]+arrFreeSpace[1])-ship.getSize());
           ship.setPositionY(posY);
 
         }else{
-          ship.setPositionY(index);
+          ship.setPositionY(newIndex);
           var posX = generateRandom(arrFreeSpace[0],(arrFreeSpace[0]+arrFreeSpace[1])-ship.getSize());
           ship.setPositionX(posX);
         }
@@ -211,7 +212,37 @@ Table.prototype.findAvailableIndex = function(direction,index,shipSize)
 };
 
 
-Table.prototype.drawShip = function(){
+Table.prototype.drawShip = function(ship){
+  if(ship.getPositionX()!=-1 && ship.getPositionY() !=-1)
+  {
+    var field = getField();
+    var posX = ship.getPositionX();
+    var posY = ship.getPositionY();
+    if(ship.getDirection()=="x")
+    {
+      field[posX][posY] = "  "+ship.getID()+"  ";
+      for(var i=1; i<ship.getSize();i++)
+      {
+        field[posX][posY+i] = "  "+ship.getID()+"  ";
+      };
+
+    }else{
+      field[posX][posY] = "  "+ship.getID()+"  "
+      for(var i=1; i<ship.getSize();i++)
+      {
+        field[posX+i][posY] = "  "+ship.getID()+"  ";
+      };
+    };
+
+    setField(field);
+
+  }else
+  {
+    console.log("the position of the ship is incorrect!!!!");
+  }
+
+
+
 
 };
 

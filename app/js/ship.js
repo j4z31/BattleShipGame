@@ -34,7 +34,7 @@ var Ship = function(id, size)
         positionX = newPositionX;
     };
     this.setPositionY = function (newPositionY) {
-        positionX = newPositionY;
+        positionY = newPositionY;
     };
 
 
