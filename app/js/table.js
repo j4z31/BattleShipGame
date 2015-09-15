@@ -31,7 +31,7 @@ var Table = function(sizeX){
 
     };
 
-    getSize = function()
+    this.getSize = function()
     {
       return size;
     };
@@ -60,6 +60,11 @@ var Table = function(sizeX){
   this._createShips();
   this._placeShips();
 };
+
+Table.prototype.getSize = function(){
+  return getSize();
+};
+
 Table.prototype.shot = function(){
 
 
