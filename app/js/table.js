@@ -1,18 +1,3 @@
-/*var Table = new function(size){
-  this.size = size;
-  this.direction = false;
-  //this.id =
-  this.ships = [];
-  this._createShips();
-};
-
-Game.prototype.start = function(){
-  var _ship = new Ship(pos, tam, dir);
-  this.ships.push(_ship);
-};*/
-
-//Trainner
-
 var Table = function(sizeX){
   var size = sizeX;
   this.ships = [];
@@ -57,8 +42,8 @@ var Table = function(sizeX){
   //this.display();
 
 
-  this._createShips();
-  this._placeShips();
+  //this._createShips();
+  //this._placeShips();
 };
 
 Table.prototype.getSize = function(){
@@ -90,8 +75,12 @@ Table.prototype.display = function(){
       col += x + "   ";
 
     }
-  }
-  console.log(delimiter);
+  };
+
+  console.log("%c" + delimiter, "color:red;font-weight:bold;");
+
+  //console.log(delimiter);
+
   console.log(col);
 
   for (var i = 0; i < tam; i++) {
@@ -105,20 +94,36 @@ Table.prototype.display = function(){
     console.log("");
     console.log(str);
   };
-  console.log(delimiter);
+  //console.log(delimiter);
+  console.log("%c" + delimiter, "color:" + 'red' + ";font-weight:bold;");
 
 
 };
 //Table.prototype._initField
 
-Table.prototype._createShips = function(){
+Table.prototype._createShips = function(newShips){
   //TODO: Number of shipe should be retrieved from a constant
-  var numShips = 8;
-  var ship;
-  for (var i = 0; i < numShips; i++) {
-    ship = new Ship(i, 6);
-    this.ships.push(ship);
-  }
+    this.ships = newShips;
+    this._placeShips();
+
+  /*var numShips = 8;
+  var ship = new Ship(1, 5);
+  this.ships.push(ship);
+  var ship1 = new Ship(2, 4);
+  this.ships.push(ship1);
+  var ship2 = new Ship(3, 3);
+  this.ships.push(ship2);
+  var ship3 = new Ship(4, 2);
+  this.ships.push(ship3);
+  var ship4 = new Ship(5, 1);
+  this.ships.push(ship4);
+  var ship5 = new Ship(6, 5);
+  this.ships.push(ship5);
+  var ship6 = new Ship(7, 4);
+  this.ships.push(ship6);
+  var ship7 = new Ship(8, 3);
+  this.ships.push(ship7);*/
+
 };
 
 Table.prototype._placeShips = function(){
