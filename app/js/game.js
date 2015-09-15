@@ -26,6 +26,7 @@ Game.prototype.start = function(){
   var numShots = 0;
   do{
     getTable().display();
+    
     numShots++;
 
     //EVALUAR EL DISPARO
