@@ -1,15 +1,19 @@
 var Table = function(sizeX){
   var size = sizeX;
   this.ships = [];
+  this.shipsKilled = 0;
   var water = "  ~  ";
+  var inco = "  ?  ";
   var _field = new Array(size);
+  var _gamerField = new Array(size);
   var _initField = function(){
 
     for (var i = 0; i < size; i++) {
       _field[i] = new Array(size); // define cada elemento como una matriz
+      _gamerField[i] = new Array(size);
       for (var j = 0; j < size; j++) {
         _field[i][j] = water; // asigna a cada elemento de la matriz bidimensional
-
+        _gamerField[i][j] = inco; // adignar una incognita a cada celda del gamer
 
       };
 
@@ -28,6 +32,13 @@ var Table = function(sizeX){
       _field = newField;
     };
 
+    getGamerField = function(){
+      return _gamerField;
+    };
+    setGamerField = function(newField){
+      _gamerField = newField;
+    };
+
     getWater = function(){
       return water;
     };
@@ -39,28 +50,98 @@ var Table = function(sizeX){
      }*/
   };
   _initField();
-  //this.display();
+  console.clear();
 
 
-  //this._createShips();
+
+
+  this._createShips();
   //this._placeShips();
+
+  this.display(_field);
+  this.display(_gamerField);
 };
 
 Table.prototype.getSize = function(){
   return getSize();
 };
 
-Table.prototype.shot = function(){
+Table.prototype.shot = function(posY,posX){
 
+  var gamerField = getGamerField();
+  var field = getField();
+  if(posX >= this.getSize() || posX < 0 || posY >= this.getSize() || posY <0)
+  {
+    console.log("disparo Incorrecto");
+
+  }
+  else {
+    if (gamerField[posX][posY] == "  ?  ") {
+
+      if(field[posX][posY] != "  ~  " )
+      {
+        var hitShip = this.findShip(field[posX][posY])
+        hitShip.hit();
+        gamerField[posX][posY]="  *  ";
+        if(hitShip.getLife()==0)
+        {
+          this.killShip(hitShip);
+        };
+      }
+      else{
+        gamerField[posX][posY] = "  ~  ";
+      }
+    }
+    else{
+      console.log("ya disparaste ahi antes");
+    };
+  }
+
+  this.display(getGamerField());
 
 };
 
-Table.prototype.display = function(){
+Table.prototype.findShip = function(ID){
+
+  for(var i = 0; i<this.ships.length;i++ )
+  {
+    if(this.ships[i].getID()== ID)
+    {
+      return this.ships[i];
+    }
+  };
+};
+
+Table.prototype.killShip = function(killedShip){
+
+  var gamerField = getGamerField();
+  if(killedShip.getDirection()=="x")
+  {
+    var x = killedShip.getPositionX();
+    var y = killedShip.getPositionY();
+    for(var i=0; i<killedShip.getSize();i++)
+    {
+      gamerField[x][y+i] = "  X  "
+    };
+  }
+  else{
+    var x = killedShip.getPositionX();
+    var y = killedShip.getPositionY();
+    for(var i=0; i<killedShip.getSize();i++)
+    {
+      gamerField[x+i][y] = "  X  "
+    };
+  }
+
+  //setGamerField(gamerField);
+};
+
+Table.prototype.display = function(actualField){
 
   //check this clear! should be moved to other class
-  console.clear();
+  //console.clear(); se limpia la pantalla
   var tam =  getSize();
-  var field = getField();
+  var field = actualField;
 
   var col = "-    ";
   var delimiter = "======";
@@ -101,12 +182,12 @@ Table.prototype.display = function(){
 };
 //Table.prototype._initField
 
-Table.prototype._createShips = function(newShips){
+Table.prototype._createShips = function(){
   //TODO: Number of shipe should be retrieved from a constant
-    this.ships = newShips;
-    this._placeShips();
-
-  /*var numShips = 8;
+    /*this.ships = newShips;
+    this._placeShips(); Habilitar estas lineas cuando este metodo ya reciba un arreglo de barcos
+    */
+  var numShips = 8;
   var ship = new Ship(1, 5);
   this.ships.push(ship);
   var ship1 = new Ship(2, 4);
@@ -122,7 +203,8 @@ Table.prototype._createShips = function(newShips){
   var ship6 = new Ship(7, 4);
   this.ships.push(ship6);
   var ship7 = new Ship(8, 3);
-  this.ships.push(ship7);*/
+  this.ships.push(ship7);
+  this._placeShips();
 
 };
 
@@ -329,25 +411,3 @@ Table.prototype.thereIsSpace = function(direction,index,spaceSize){
 
 };
 
-
-  /*Table.prototype._placeShips = function(){
-    var pos = parseInt(Math.random() * this.size);
-
-    for (var i = 0; i < this.size; i++) {
-      for (var i = 0; i < this.ships.length; i++) {
-        if (pos + ships[i]._getTam() < this.size &&
-          notColision(pos, ships[i]) ) {
-            drawShip(ships[i]);
-        }
-      }
-    }
-  };
-
-  Table.prototype._notColision = function(pos, ship){
-    var res = false;
-    for (var i = 0; i < field.length; i++) {
-      if (field[i] !== '-') {
-        res = true
-      }
-    }
-  };*/
