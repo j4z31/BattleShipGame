@@ -5,6 +5,7 @@ var Ship = function(id, size)
     var direction = "";
     var positionX = -1;
     var positionY = -1;
+    var life= size;
 
     this.getSize = function()
     {
@@ -36,6 +37,16 @@ var Ship = function(id, size)
     this.setPositionY = function (newPositionY) {
         positionY = newPositionY;
     };
+
+    this.getLife = function(){
+        return life;
+    };
+
+    this.hit = function(){
+        life--;
+    };
+
+
 
 
 

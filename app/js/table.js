@@ -1,7 +1,7 @@
 var Table = function(sizeX){
   var size = sizeX;
   this.ships = [];
-  this.shipsKilled = 0;
+  this.shipsLeftToKilled=0;
   var water = "  ~  ";
   var inco = "  ?  ";
   var _field = new Array(size);
@@ -45,21 +45,27 @@ var Table = function(sizeX){
 
 
 
+
     /*for (var i = 0; i < this.size; i++) {
      this._field.push('-');
      }*/
   };
   _initField();
-  console.clear();
+  //console.log(this.shipsLeftToKilled);
+  //console.clear();
 
 
 
 
-  this._createShips();
+  //this._createShips();
   //this._placeShips();
 
-  this.display(_field);
-  this.display(_gamerField);
+  //this.display(_field);
+  //this.display(_gamerField);
+};
+
+Table.prototype.getshipsLeftToKilled = function(){
+  return this.shipsLeftToKilled;
 };
 
 Table.prototype.getSize = function(){
@@ -68,6 +74,7 @@ Table.prototype.getSize = function(){
 
 Table.prototype.shot = function(posY,posX){
 
+  console.clear();
   var gamerField = getGamerField();
   var field = getField();
   if(posX >= this.getSize() || posX < 0 || posY >= this.getSize() || posY <0)
@@ -97,7 +104,7 @@ Table.prototype.shot = function(posY,posX){
     };
   }
 
-  this.display(getGamerField());
+  //this.display(getGamerField());
 
 };
 
@@ -117,31 +124,43 @@ Table.prototype.killShip = function(killedShip){
   var gamerField = getGamerField();
   if(killedShip.getDirection()=="x")
   {
+    this.shipsLeftToKilled--;
     var x = killedShip.getPositionX();
     var y = killedShip.getPositionY();
     for(var i=0; i<killedShip.getSize();i++)
     {
       gamerField[x][y+i] = "  X  "
-    };
+    }
+
   }
   else{
+    this.shipsLeftToKilled--;
     var x = killedShip.getPositionX();
     var y = killedShip.getPositionY();
     for(var i=0; i<killedShip.getSize();i++)
     {
       gamerField[x+i][y] = "  X  "
-    };
+    }
+
   }
 
   //setGamerField(gamerField);
 };
 
-Table.prototype.display = function(actualField){
+Table.prototype.display = function(actual){
 
   //check this clear! should be moved to other class
   //console.clear(); se limpia la pantalla
   var tam =  getSize();
-  var field = actualField;
+  if(actual == "solution")
+  {
+    var field = getField();
+  }
+  else
+  {
+    var field = getGamerField();
+  }
+
 
   var col = "-    ";
   var delimiter = "======";
@@ -182,12 +201,15 @@ Table.prototype.display = function(actualField){
 };
 //Table.prototype._initField
 
-Table.prototype._createShips = function(){
+Table.prototype._createShips = function(shipsA){
   //TODO: Number of shipe should be retrieved from a constant
     /*this.ships = newShips;
     this._placeShips(); Habilitar estas lineas cuando este metodo ya reciba un arreglo de barcos
     */
-  var numShips = 8;
+    this.ships =  shipsA;
+    this.shipsLeftToKilled = shipsA.length;
+    this._placeShips();
+  /*var numShips = 8;
   var ship = new Ship(1, 5);
   this.ships.push(ship);
   var ship1 = new Ship(2, 4);
@@ -204,7 +226,7 @@ Table.prototype._createShips = function(){
   this.ships.push(ship6);
   var ship7 = new Ship(8, 3);
   this.ships.push(ship7);
-  this._placeShips();
+  this._placeShips();*/
 
 };
 
