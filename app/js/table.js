@@ -433,3 +433,4 @@ Table.prototype.thereIsSpace = function(direction,index,spaceSize){
 
 };
 
+module.exports = Table;
